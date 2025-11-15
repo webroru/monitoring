@@ -1,0 +1,69 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    network_mode: host
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    # ports:
+    #   - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    network_mode: host
+    # ports:
+    #   - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+
+  node_exporter:
+    image: prom/node-exporter
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:ro
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker:/var/lib/docker:ro
+  #   restart: unless-stopped
+
+  mysql_exporter:
+    image: prom/mysqld-exporter
+    env_file:
+      - .env
+    networks:
+      - ntb_default
+      - default
+    command:
+      - --mysqld.address=mysql:3306
+      - --mysqld.username=drupal
+    ports:
+      - "9104:9104"
+    restart: unless-stopped
+
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    networks:
+      - ntb_default
+      - default
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/nginx_status'
+    ports:
+      - "9113:9113"
+    restart: unless-stopped
+
+volumes:
+  grafana-data:
+
+networks:
+  ntb_default:
+    external: true
