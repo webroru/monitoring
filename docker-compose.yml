@@ -72,6 +72,18 @@ services:
       - "9121:9121"
     restart: unless-stopped
 
+  process_exporter:
+    image: ncabatoff/process-exporter:v0.8.7
+    network_mode: host
+    volumes:
+      - ./process-exporter.yml:/config/process-exporter.yml:ro
+    command:
+      - --web.listen-address=:9256
+      - --config.path=/config/process-exporter.yml
+    ports:
+      - "9256:9256"
+    restart: unless-stopped
+
 volumes:
   grafana-data:
 
