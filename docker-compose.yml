@@ -74,12 +74,13 @@ services:
 
   process_exporter:
     image: ncabatoff/process-exporter:v0.8.7
-    network_mode: host
+    pid: host
     volumes:
       - ./process-exporter.yml:/config/process-exporter.yml:ro
+      - /proc:/host/proc:ro
     command:
-      - --web.listen-address=:9256
-      - --config.path=/config/process-exporter.yml
+      - --procfs=/host/proc
+      - -config.path=/config/process-exporter.yml
     ports:
       - "9256:9256"
     restart: unless-stopped

@@ -1,10 +1,10 @@
 process_names:
   - name: "mysqld"
     cmdline:
-      - "mysqld"
+      - ".*mysqld.*"
   - name: "redis-server"
     cmdline:
-      - "redis-server"
+      - ".*redis-server.*"
   - name: "php-fpm"
     cmdline:
-      - "php-fpm"
+      - ".*php-fpm.*"
