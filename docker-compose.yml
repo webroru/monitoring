@@ -56,7 +56,7 @@ services:
       - ntb_default
       - default
     command:
-      - '-nginx.scrape-uri=http://nginx:80/nginx_status'
+      - '-nginx.scrape-uri=http://nginx:8080/nginx_status'
     ports:
       - "9113:9113"
     restart: unless-stopped
